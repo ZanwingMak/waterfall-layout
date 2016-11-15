@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>瀑布流布局js实现</title>
+		<style>
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			#main{
+				position: relative;
+				margin: 0 auto;
+			}
+			.box{
+				padding: 10px 5px 5px 10px;
+				float: left;
+			}
+			.pic{
+				padding: 10px;
+				border: 1px solid #A9A9A9;
+				border-radius: 5px;
+				box-shadow: 0 0 5px #A9A9A9;
+			}
+			.pic img{
+				width: 150px;
+				height: auto;
+			}
+		</style>
+		<script>
+		/*解决ie没有document.getElementsByClassName的问题*/
+			if(!document.getElementsByClassName){
+			    document.getElementsByClassName = function(className, element){
+			        var children = (element || document).getElementsByTagName('*');
+			        var elements = new Array();
+			        for (var i=0; i<children.length; i++){
+			            var child = children[i];
+			            var classNames = child.className.split(' ');
+			            for (var j=0; j<classNames.length; j++){
+			                if (classNames[j] == className){ 
+			                    elements.push(child);
+			                    break;
+			                }
+			            }
+			        } 
+			        return elements;
+			    };
+			}
+			
+			//此处假设从后台获取到了需要滚动加载的数据
+			var img_loaddata = {
+				'data':[
+						{'src':'images/031.jpg'},
+						{'src':'images/032.jpg'},
+						{'src':'images/033.jpg'},
+						{'src':'images/034.jpg'},
+						{'src':'images/035.jpg'},
+						{'src':'images/036.jpg'},
+						{'src':'images/037.jpg'},
+						{'src':'images/038.jpg'},
+						{'src':'images/039.jpg'},
+						{'src':'images/040.jpg'}
+					]
+			};
+			
+			//当窗口大小改变时
+			window.onresize = function(){				
+				waterFall();
+            }
+			
+			//当拖动滚动条时
+			window.onscroll = function(){
+				if(checkScrollSlice()){
+					loadNewData();
+				}
+			}			
+			
+            //当页面加载完时
+            window.onload = function(){
+				waterFall();
+				//当图片加载完了，但是整个瀑布盒子的高度小于窗口高度导致没有
+				//滚动条时也加载新数据
+				noScroll();
+
+			}
+			
+			//存放第一行每一列的高度
+			var firstColHeight = [];
+			function waterFall(){
+				var objMain = document.getElementById('main');
+				var objBox = document.getElementsByClassName('box');
+				//计算整个页面显示的列数
+				var objBoxWidth = objBox[0].offsetWidth;
+				var cols = Math.floor(document.documentElement.clientWidth/objBoxWidth);
+				//重置数组
+				firstColHeight = [];
+				//设置main的宽度
+				objMain.style.cssText = 'width:'+objBoxWidth*cols+'px;';
+				//循环所有box
+				for(var i=0;i<objBox.length;i++){
+					//如果是第一行的
+					if(i<cols){
+						firstColHeight.push(objBox[i].offsetHeight);
+						objBox[i].style.position = 'absolute';
+						objBox[i].style.top = '0px';
+						objBox[i].style.left = objBoxWidth*i+'px';
+					}else{
+						var minHeight = Math.min.apply(null,firstColHeight);
+						var min_index = getIndex(firstColHeight,minHeight);
+						objBox[i].style.position = 'absolute';
+						objBox[i].style.top = minHeight + 'px';
+						//objBox[i].style.left = objBoxWidth*min_index+'px';
+						objBox[i].style.left = objBox[min_index].offsetLeft+'px';
+						//给当前的最小值加上相应的高度
+//						console.log(firstColHeight);
+						firstColHeight[min_index] += objBox[i].offsetHeight;
+//						console.log(objBox[i].offsetHeight);
+//						console.log(objBox[i].scrollHeight);
+					}
+					
+//					console.log(objBox[i].style.top);
+//					console.log(objBox[i].style.left);
+//					console.log(firstColHeight);
+				}
+			}
+			
+			function getIndex(arr,val){
+				for(var i in arr){
+					if(arr[i] == val){
+						return i;
+					}
+				}
+				
+			}			
+			
+			//检测是否需要滚动加载
+			function checkScrollSlice(){
+//				console.log(firstColHeight);
+				var minHeight = Math.min.apply(null,firstColHeight);
+				var min_index = getIndex(firstColHeight,minHeight);
+				var scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+				var clientHeight = document.body.clientHeight || document.documentElement.clientHeight;
+				return (scrollTop >= minHeight - clientHeight);
+			}
+			
+			//加载新数据
+			function loadNewData(){
+				var objMain = document.getElementById('main');
+					for(var i=0;i<img_loaddata.data.length;i++){
+						var newObjBox = document.createElement('div');
+						newObjBox.className = 'box';
+//						newObjBox.style = 'position:absolute;';
+						var newPic = document.createElement('div');
+						newPic.className = 'pic'
+						var newImg = document.createElement('img');
+						newImg.style = 'height=auto;'
+						//console.log(img_loaddata.data[i].src);
+						newImg.src = img_loaddata.data[i].src;
+						newPic.appendChild(newImg);		
+						newObjBox.appendChild(newPic);
+						objMain.appendChild(newObjBox);
+					}
+					waterFall();
+//			var main=document.getElementById('main');	
+//			main.innerHTML+=main.innerHTML;
+//			waterFall();
+			}
+			
+			function noScroll(){
+				var objBox = document.getElementsByClassName('box');
+				var lastBox = objBox[objBox.length-1];
+				var lastBoxHeight = lastBox.offsetTop + Math.floor(lastBox.offsetHeight);
+				var clientHeight = document.body.clientHeight || document.documentElement.clientHeight;
+				if(lastBoxHeight<clientHeight+5){
+					loadNewData();
+					noScroll();
+				}
+			}
+			
+			
+		</script>
+	</head>
+	<body>
+		<div id="main">
+			<div class="box">
+				<div class="pic">
+					<img src='images/001.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/002.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/003.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/004.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/005.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/006.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/007.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/008.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/009.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/010.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/011.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/012.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/013.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/014.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/015.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/016.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/017.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/018.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/019.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/020.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/021.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/022.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/023.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/024.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/025.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/026.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/027.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/028.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/029.jpg' />
+				</div>
+			</div>
+			<div class="box">
+				<div class="pic">
+					<img src='images/030.jpg' />
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
