@@ -9,7 +9,8 @@
 
 3.拖动滚动条，执行了多次方法。（我是定义了个变量来判断是否允许再次执行加载数据的方法）
 
-Demo：http://demo.gfwboom.com/jquery / 瀑布流布局 / jquery.html
+Demo：http://demo.gfwboom.com/jquery/瀑布流布局/jquery.html
+
 Github：https://github.com/maizhenying09/waterfall-layout
 
 ![image](https://gfwboom.b0.upaiyun.com/usr/uploads/2016/11/1939721335.jpg)
