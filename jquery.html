@@ -37,6 +37,9 @@
 				left: 48%;
 				z-index:99999;
 				display: none;
+				font-family:Microsoft YaHei;
+				font-size:15px;
+				font-weight:solid;
 			}
 
 			.loader2{
@@ -65,11 +68,10 @@
 					}
 				}
 			});
-
 			
             //当页面加载完时
             $(document).ready(function(){
-				$('.loader1').fadeIn(1500);
+				$('.loader1').stop().fadeIn(1500);
 				imageLoadingComplete();
 			});
 
@@ -93,7 +95,7 @@
 					//callback();
 					waterFall();
 					newImageLoadingComplete();
-					$('.loader1').fadeOut(500);
+					$('.loader1').stop().fadeOut(500);
 				});
 			}
 
@@ -184,7 +186,7 @@
 					}
 				});
 				flag = true;
-				$('.loader2').fadeOut(500);
+				$('.loader2').stop().fadeOut(500);
 			}
 
 			//检测是否需要加载
@@ -218,7 +220,7 @@
 					]
 			};
 			function loadNewData(){
-				$('.loader2').fadeIn(300);
+				$('.loader2').stop().fadeIn(300);
 //				console.log('加载数据');
 //				console.log(firstColHeight);
 				var objMain = $('#main');
@@ -252,6 +254,7 @@
 					<div></div>
 					<div></div>
 				</div>
+				<p>Loading...</p>
 			</div>
 			<div class="box">
 				<div class="pic">
