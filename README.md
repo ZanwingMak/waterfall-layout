@@ -12,6 +12,6 @@ Demo：http://demo.gfwboom.com/jquery/瀑布流布局/jquery.html
 
 Github：https://github.com/maizhenying09/waterfall-layout
 
-Blog：https://gfwboom.com/archives/daily/2016/11/16/jquery-waterfall-flow-layout.html
+Blog：https://gfwboom.com/archives/code/jQuery/2016/11/16/jquery-waterfall-flow-layout.html
 
 ![image](https://gfwboom.b0.upaiyun.com/usr/uploads/2016/11/1939721335.jpg)
