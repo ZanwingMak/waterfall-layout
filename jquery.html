@@ -73,6 +73,7 @@
 				imageLoadingComplete();
 			});
 
+			//等图片加载完才执行，否则div高度不够，后面的图片重叠。
 			function imageLoadingComplete() {
 				var imgdefereds=[];
 				$('#main img').each(function(){
