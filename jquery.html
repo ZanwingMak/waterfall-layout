@@ -38,8 +38,9 @@
 				z-index:99999;
 				display: none;
 				font-family:Microsoft YaHei;
-				font-size:15px;
+				font-size:14px;
 				font-weight:solid;
+				text-align: center;
 			}
 
 			.loader2{
@@ -48,6 +49,10 @@
 				left: 48%;
 				z-index:99999;
 				display: none;
+				font-family:Microsoft YaHei;
+				font-size:12px;
+				font-weight:solid;
+				text-align: center;
 			}
 		</style>
 		<script src="jquery-3.1.1.min.js"></script>
@@ -60,13 +65,23 @@
 			
 			//当拖动滚动条时
 			var flag = true;
+			var p=0,t=0;
 			$(window).scroll(function(){
-				if(checkIsNeedLoad() && flag){
-					flag = false;
-					if(!flag){
-						loadNewData();
+				p = $(this).scrollTop();
+				if(t<=p){//下滚
+					$('.loader2 p').text('加载中');
+					if(checkIsNeedLoad() && flag){
+						flag = false;
+						if(!flag){
+							loadNewData();
+						}
 					}
 				}
+				else{//上滚
+					return false;
+				}
+				setTimeout(function(){t = p;},0);
+
 			});
 			
             //当页面加载完时
@@ -96,6 +111,7 @@
 					waterFall();
 					newImageLoadingComplete();
 					$('.loader1').stop().fadeOut(500);
+
 				});
 			}
 
@@ -207,6 +223,36 @@
 			//此处假设从后台获取到了需要滚动加载的数据
 			var img_loaddata = {
 				'data':[
+						{'src':'images/001.jpg'},
+						{'src':'images/002.jpg'},
+						{'src':'images/003.jpg'},
+						{'src':'images/004.jpg'},
+						{'src':'images/005.jpg'},
+						{'src':'images/006.jpg'},
+						{'src':'images/007.jpg'},
+						{'src':'images/008.jpg'},
+						{'src':'images/009.jpg'},
+						{'src':'images/010.jpg'},
+						{'src':'images/011.jpg'},
+						{'src':'images/012.jpg'},
+						{'src':'images/013.jpg'},
+						{'src':'images/014.jpg'},
+						{'src':'images/015.jpg'},
+						{'src':'images/016.jpg'},
+						{'src':'images/017.jpg'},
+						{'src':'images/018.jpg'},
+						{'src':'images/019.jpg'},
+						{'src':'images/020.jpg'},
+						{'src':'images/021.jpg'},
+						{'src':'images/022.jpg'},
+						{'src':'images/023.jpg'},
+						{'src':'images/024.jpg'},
+						{'src':'images/025.jpg'},
+						{'src':'images/026.jpg'},
+						{'src':'images/027.jpg'},
+						{'src':'images/028.jpg'},
+						{'src':'images/029.jpg'},
+						{'src':'images/030.jpg'},
 						{'src':'images/031.jpg'},
 						{'src':'images/032.jpg'},
 						{'src':'images/033.jpg'},
@@ -216,31 +262,84 @@
 						{'src':'images/037.jpg'},
 						{'src':'images/038.jpg'},
 						{'src':'images/039.jpg'},
-						{'src':'images/040.jpg'}
+						{'src':'images/040.jpg'},
+						{'src':'images/041.jpg'},
+						{'src':'images/042.jpg'},
+						{'src':'images/043.jpg'},
+						{'src':'images/044.jpg'},
+						{'src':'images/045.jpg'},
+						{'src':'images/046.jpg'},
+						{'src':'images/047.jpg'},
+						{'src':'images/048.jpg'},
+						{'src':'images/049.jpg'},
+						{'src':'images/050.jpg'},
+						{'src':'images/051.jpg'},
+						{'src':'images/052.jpg'},
+						{'src':'images/053.jpg'},
+						{'src':'images/054.jpg'},
+						{'src':'images/055.jpg'},
+						{'src':'images/056.jpg'},
+						{'src':'images/057.jpg'},
+						{'src':'images/058.jpg'},
+						{'src':'images/059.jpg'},
+						{'src':'images/060.jpg'},
+						{'src':'images/061.jpg'},
+						{'src':'images/062.jpg'},
+						{'src':'images/063.jpg'},
+						{'src':'images/064.jpg'},
+						{'src':'images/065.jpg'},
+						{'src':'images/066.jpg'},
+						{'src':'images/067.jpg'},
+						{'src':'images/068.jpg'},
+						{'src':'images/069.jpg'},
+						{'src':'images/070.jpg'},
+						{'src':'images/071.jpg'},
+						{'src':'images/072.jpg'},
+						{'src':'images/073.jpg'},
+						{'src':'images/074.jpg'},
+						{'src':'images/075.jpg'},
+						{'src':'images/076.jpg'},
+						{'src':'images/077.jpg'},
+						{'src':'images/078.jpg'},
+						{'src':'images/079.jpg'},
+						{'src':'images/080.jpg'},
 					]
 			};
+			var page = 1;
+			var count = 10;
+			var img_data = img_loaddata.data;
 			function loadNewData(){
-				$('.loader2').stop().fadeIn(300);
+				page += 1;
 //				console.log('加载数据');
 //				console.log(firstColHeight);
 				var objMain = $('#main');
 				var objBox = $('#main .box');
 //				var newObj = '';
-				$.each(img_loaddata.data,function(index,val){
+				current_data = img_data.slice((page-1)*count,page*count);
+//				console.log(current_data);
+				if(current_data.length){
+					$('.loader2').stop().fadeIn(500);
+					$.each(current_data,function(index,val){
 //					$('<img>').attr('src',$(val).attr('src')).appendTo($('<div>').addClass('pic').appendTo($('<div>').addClass('box').appendTo(objMain)));
-					var newObjBox = $('<div>').addClass('box').addClass('new').appendTo(objMain);
-					var newObjPic = $('<div>').addClass('pic').appendTo(newObjBox);
-					var newObjImg = $('<img>').addClass('image').attr('src',$(val).attr('src')).appendTo(newObjPic);
+						var newObjBox = $('<div>').addClass('box').appendTo(objMain);
+						var newObjPic = $('<div>').addClass('pic').appendTo(newObjBox);
+						var newObjImg = $('<img>').addClass('image').attr('src',$(val).attr('src')).appendTo(newObjPic);
 //					console.log(newObjImg.load);
-//					($('<div class="box">'+'<div class="pic">'+'<img src='+$(val).attr("src")+' /></div></div>')).appendTo(objMain); 
+//					($('<div class="box">'+'<div class="pic">'+'<img src='+$(val).attr("src")+' /></div></div>')).appendTo(objMain);
 //					newObj += '<div class="box">'+'<div class="pic">'+'<img src='+$(val).attr("src")+' /></div></div>';
-				});
+					});
 //				objMain.html('"'+objMain.html()+ newObj +'"');
 //				objMain.html('"'+objMain.html()+objMain.html()+'"');
 //				console.log($('img')[$('img').length-1]);
-				imageLoadingComplete();
+					imageLoadingComplete();
+				}else{
+					page -= 1;
+					flag = true;
+					$('.loader2 p').text('数据暂时加载完了0.0');
+					$('.loader2').stop().fadeIn(500);
+					$('.loader2').fadeOut(1000);
+				}
 			}
-
 			
 		</script>
 	</head>
@@ -254,7 +353,7 @@
 					<div></div>
 					<div></div>
 				</div>
-				<p>Loading...</p>
+				<p>加载中</p>
 			</div>
 			<div class="box">
 				<div class="pic">
@@ -306,106 +405,6 @@
 					<img class='image' src='images/010.jpg' />
 				</div>
 			</div>
-			<div class="box">
-				<div class="pic">
-					<img class='image' src='images/011.jpg' />
-				</div>
-			</div>
-			<div class="box">
-				<div class="pic">
-					<img class='image' src='images/012.jpg' />
-				</div>
-			</div>
-			<div class="box">
-				<div class="pic">
-					<img class='image' src='images/013.jpg' />
-				</div>
-			</div>
-			<div class="box">
-				<div class="pic">
-					<img class='image' src='images/014.jpg' />
-				</div>
-			</div>
-			<div class="box">
-				<div class="pic">
-					<img class='image' src='images/015.jpg' />
-				</div>
-			</div>
-			<div class="box">
-				<div class="pic">
-					<img class='image' src='images/016.jpg' />
-				</div>
-			</div>
-			<div class="box">
-				<div class="pic">
-					<img class='image' src='images/017.jpg' />
-				</div>
-			</div>
-			<div class="box">
-				<div class="pic">
-					<img class='image' src='images/018.jpg' />
-				</div>
-			</div>
-			<div class="box">
-				<div class="pic">
-					<img class='image' src='images/019.jpg' />
-				</div>
-			</div>
-			<div class="box">
-				<div class="pic">
-					<img class='image' src='images/020.jpg' />
-				</div>
-			</div>
-			<div class="box">
-				<div class="pic">
-					<img class='image' src='images/021.jpg' />
-				</div>
-			</div>
-			<div class="box">
-				<div class="pic">
-					<img class='image' src='images/022.jpg' />
-				</div>
-			</div>
-			<div class="box">
-				<div class="pic">
-					<img class='image' src='images/023.jpg' />
-				</div>
-			</div>
-			<div class="box">
-				<div class="pic">
-					<img class='image' src='images/024.jpg' />
-				</div>
-			</div>
-			<div class="box">
-				<div class="pic">
-					<img class='image' src='images/025.jpg' />
-				</div>
-			</div>
-			<div class="box">
-				<div class="pic">
-					<img class='image' src='images/026.jpg' />
-				</div>
-			</div>
-			<div class="box">
-				<div class="pic">
-					<img class='image' src='images/027.jpg' />
-				</div>
-			</div>
-			<div class="box">
-				<div class="pic">
-					<img class='image' src='images/028.jpg' />
-				</div>
-			</div>
-			<div class="box">
-				<div class="pic">
-					<img class='image' src='images/029.jpg' />
-				</div>
-			</div>
-			<div class="box">
-				<div class="pic">
-					<img class='image' src='images/030.jpg' />
-				</div>
-			</div>
 			<div class="loader2">
 				<div class="loader-inner line-scale">
 					<div></div>
@@ -413,6 +412,7 @@
 					<div></div>
 					<div></div>
 					<div></div>
+					<p>加载中</p>
 				</div>
 			</div>
 		</div>
